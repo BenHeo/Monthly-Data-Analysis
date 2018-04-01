@@ -85,7 +85,7 @@ wd7 <- ggplot(weekdayat7, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) +
 
 
 # 주말 전체 역 중 7시에 (타는 사람-내리는 사람)이 많은 top40
-weekendat7 <- df %>% filter(weekend == 0) %>% select(stationK, seven) %>% 
+weekendat7 <- df %>% filter(weekend == 1) %>% select(stationK, seven) %>% 
   group_by(stationK) %>% summarise(avg = mean(seven)) %>%
   arrange(desc(avg)) %>% mutate(rank = dense_rank(desc(avg))) %>% top_n(40,avg)
 
@@ -126,6 +126,34 @@ we18 <- ggplot(weekendat18, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) +
   geom_hline(yintercept = quantile(weekendat18$avg, 0.9), lty = 1, color = 'deeppink')+
   labs(x='Station', y='average # of (board - exit)')
 
+# 주중 전체 역 중 19시에 (타는 사람-내리는 사람)이 많은 top40
+weekdayat19 <- df %>% filter(weekend == 0) %>% select(stationK, ninteen) %>% 
+  group_by(stationK) %>% summarise(avg = mean(ninteen)) %>%
+  arrange(desc(avg)) %>% mutate(rank = dense_rank(desc(avg))) %>% top_n(40,avg)
+
+wd19 <- ggplot(weekdayat19, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) + 
+  geom_bar(stat="identity", position="dodge")+ scale_fill_gradient(low = 'skyblue', high = 'green') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  geom_hline(yintercept = mean(weekdayat19$avg), lty = 2) + 
+  geom_hline(yintercept = quantile(weekdayat19$avg, 0.75), lty = 2, color = 'red')+
+  geom_hline(yintercept = quantile(weekdayat19$avg, 0.25), lty = 2, color = 'blue')+
+  geom_hline(yintercept = quantile(weekdayat19$avg, 0.9), lty = 1, color = 'deeppink')+
+  labs(x='Station', y='average # of (board - exit)')
+
+# 주말 전체 역 중 19시에 (타는 사람-내리는 사람)이 많은 top40
+weekendat19 <- df %>% filter(weekend == 1) %>% select(stationK, ninteen) %>% 
+  group_by(stationK) %>% summarise(avg = mean(ninteen)) %>%
+  arrange(desc(avg)) %>% mutate(rank = dense_rank(desc(avg))) %>% top_n(40,avg)
+
+we19 <- ggplot(weekendat19, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) + 
+  geom_bar(stat="identity", position="dodge")+ scale_fill_gradient(low = 'skyblue', high = 'green') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  geom_hline(yintercept = mean(weekendat19$avg), lty = 2) + 
+  geom_hline(yintercept = quantile(weekendat19$avg, 0.75), lty = 2, color = 'red')+
+  geom_hline(yintercept = quantile(weekendat19$avg, 0.25), lty = 2, color = 'blue')+
+  geom_hline(yintercept = quantile(weekendat19$avg, 0.9), lty = 1, color = 'deeppink')+
+  labs(x='Station', y='average # of (board - exit)')
+
 # 24시 이후 전체 역 중 (타는 사람-내리는 사람)이 많은 top40
 afternn <- df %>% filter(weekend == 0) %>% select(stationK, after24) %>% 
   group_by(stationK) %>% summarise(avg = mean(after24)) %>%
@@ -138,6 +166,19 @@ wd24 <- ggplot(afternn, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) +
   geom_hline(yintercept = quantile(afternn$avg, 0.75), lty = 2, color = 'red')+
   geom_hline(yintercept = quantile(afternn$avg, 0.25), lty = 2, color = 'blue')+
   geom_hline(yintercept = quantile(afternn$avg, 0.9), lty = 1, color = 'deeppink')+
+  labs(x='Station', y='average # of (board - exit)')
+
+afternnd <- df %>% filter(weekend == 1) %>% select(stationK, after24) %>% 
+  group_by(stationK) %>% summarise(avg = mean(after24)) %>%
+  arrange(desc(avg)) %>% mutate(rank = dense_rank(desc(avg))) %>% top_n(40,avg)
+
+we24 <- ggplot(afternnd, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) + 
+  geom_bar(stat="identity", position="dodge")+ scale_fill_gradient(low = 'skyblue', high = 'green') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  geom_hline(yintercept = mean(afternnd$avg), lty = 2) + 
+  geom_hline(yintercept = quantile(afternnd$avg, 0.75), lty = 2, color = 'red')+
+  geom_hline(yintercept = quantile(afternnd$avg, 0.25), lty = 2, color = 'blue')+
+  geom_hline(yintercept = quantile(afternnd$avg, 0.9), lty = 1, color = 'deeppink')+
   labs(x='Station', y='average # of (board - exit)')
 
 # 주말 24시 이후는 별로 필요 없다 오히려 23시가 궁금
@@ -187,7 +228,7 @@ rank40s <- ggplot(timeforties, aes(x=timing, y=value, group = station, color=sta
   scale_colour_discrete(guide="none")+
   labs(y='rank')
 # 하단의 문법은 사용하려면 새로운 패키지를 받아야 하며 tidyverse의 많은 패키지를 잡아먹어서 한 번 쓰고 새로 시작해야함
-#library(plotly)
+# library(plotly)
 # g<-ggplot(timeforties, aes(x=timing, y=value, group = station, color=station)) + geom_line() + geom_point()+
 #   geom_dl(aes(label = station), method = list(dl.trans(x = x + .2), "last.points",cex = 0.8,hjust = 1)) +
 #   geom_dl(aes(label = station), method = list(dl.trans(x = x - .2), "first.points",cex = 0.8, hjust = 1)) +
@@ -196,5 +237,6 @@ rank40s <- ggplot(timeforties, aes(x=timing, y=value, group = station, color=sta
 
 ggsave('wd5.png', wd5); ggsave('we5.png', we5); ggsave('wd6.png', wd6); ggsave('we6.png', we6)
 ggsave('wd7.png', wd7); ggsave('we7.png', we7); ggsave('wd18.png', wd18); ggsave('we18.png', we18)
-ggsave('wd23.png', wd23); ggsave('we23.png', we23); ggsave('wd24.png', wd24)
+ggsave('wd19.png', wd19); ggsave('we19.png', we19); ggsave('wd23.png', wd23); ggsave('we23.png', we23); 
+ggsave('wd24.png', wd24); ggsave('we24.png', we24)
 

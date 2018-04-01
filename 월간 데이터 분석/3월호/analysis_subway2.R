@@ -20,19 +20,27 @@ head(df)
 target <- 511:516
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
-target_station2 <- target_stations %>% select(stationN, stationK, five)
-at_five_with_cum <- bind_cols(target_station2, cum_five = cumsum(target_station2$five))
-ggplot(at_five_with_cum, aes(x=stationN, y=cum_five)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 4, shape=10)
-
+target_station2 <- target_stations %>% select(stationN, stationK, seven)
+at_five_with_cum <- bind_cols(target_station2, cum_seven = cumsum(target_station2$seven))
+usn<-ggplot(at_five_with_cum, aes(x=stationN, y=cum_seven)) + geom_line(size=1, color='#996CAC') +
+  geom_area(position='identity', fill='#996CAC') + geom_point(size = 4, shape=10)
+ggsave('usn.png', usn)
+target <- 511:517
+target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
+  group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
+target_station2 <- target_stations %>% select(stationN, stationK, seven)
+at_five_with_cum <- bind_cols(target_station2, cum_seven = cumsum(target_station2$seven))
+usn2<-ggplot(at_five_with_cum, aes(x=stationN, y=cum_seven)) + geom_line(size=1, color='#996CAC') +
+  geom_area(position='identity', fill='#996CAC') + geom_point(size = 4, shape=10)
+ggsave('usn2.png', usn2)
 
 # for lane 1 users
 target <- 101:177
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane1 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane1 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#0052A4') +
+  geom_area(position='identity', fill='#0052A4') + geom_point(size = 1, shape=10)
 ggsave('lane1.png', lane1)
 
 # for lane 2 users
@@ -40,8 +48,8 @@ target <- 200:271
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane2 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane2 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#009D3E') +
+  geom_area(position='identity', fill='#009D3E') + geom_point(size = 1, shape=10)
 ggsave('lane2.png', lane2)
 
 # for lane 3 users
@@ -49,8 +57,8 @@ target <- 300:370
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane3 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane3 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#EF7C1C') +
+  geom_area(position='identity', fill='#EF7C1C') + geom_point(size = 1, shape=10)
 ggsave('lane3.png', lane3)
 
 # for lane 4 users
@@ -58,8 +66,8 @@ target <- 400:470
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane4 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane4 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#00A5DE') +
+  geom_area(position='identity', fill='#00A5DE') + geom_point(size = 1, shape=10)
 ggsave('lane4.png', lane4)
 
 # for lane 5 users
@@ -67,8 +75,8 @@ target <- 511:561
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane5 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane5 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#996CAC') +
+  geom_area(position='identity', fill='#996CAC') + geom_point(size = 1, shape=10)
 ggsave('lane5.png', lane5)
 
 # for lane 6 users
@@ -76,8 +84,8 @@ target <- 600:671
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane6 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane6 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#CD7C2F') +
+  geom_area(position='identity', fill='#CD7C2F') + geom_point(size = 1, shape=10)
 ggsave('lane6.png', lane6)
 
 # for lane 7 users
@@ -85,8 +93,8 @@ target <- 701:771
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane7 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane7 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#747F00') +
+  geom_area(position='identity', fill='#747F00') + geom_point(size = 1, shape=10)
 ggsave('lane7.png', lane7)
 
 # for lane 8 users
@@ -94,6 +102,6 @@ target <- 801:888
 target_stations <- df %>% filter(weekend == 0) %>% select(stationN, stationK, five:after24) %>% 
   group_by(stationN, stationK) %>% summarise_all(funs(mean)) %>% filter(stationN %in% target)
 target_station2 <- target_stations %>% select(stationN, stationK, seven)
-lane8 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='skyblue') +
-  geom_area(position='identity', fill='skyblue') + geom_point(size = 1, shape=10)
+lane8 <- ggplot(target_station2, aes(x=stationN, y=seven)) + geom_line(size=1, color='#EA545D') +
+  geom_area(position='identity', fill='#EA545D') + geom_point(size = 1, shape=10)
 ggsave('lane8.png', lane8)
