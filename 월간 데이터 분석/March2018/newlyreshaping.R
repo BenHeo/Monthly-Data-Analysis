@@ -2,7 +2,7 @@ library(tidyverse)
 library(lubridate)
 library(data.table)
 
-setwd('C:/Users/asd/Desktop/데이터 사이언스/월간 데이터 분석/3월호/data')
+setwd('C:/Users/asd/Desktop/데이터 사이언스/Monthly Data Analysis/월간 데이터 분석/March2018/data')
 # read files
 df <- fread('2017년_1_9월_일별_역별_시간대별_승하차인원_1_8호선_.csv')
 dfcolname <- c('date','month', 'stationN', 'stationK','i/o', 
@@ -10,8 +10,9 @@ dfcolname <- c('date','month', 'stationN', 'stationK','i/o',
                'fifteen', 'sixteen', 'seventeen', 'eighteen', 'ninteen', 'twenty', 'twentyone', 
                'twentytwo', 'twentythree', 'after24')  #change colnames and time range is 4-5 ~ 23-24
 colnames(df) <- dfcolname
+# station number were written ununiformly, if real number is 327, some of them were 1327. So, delete thousands
 df <- df %>% mutate(stationN = ifelse(stationN >= 1000, (stationN%%1000), (stationN%/%1))) #%>% select(stationN)
-df <- df %>% mutate(lane = (stationN%/%100))
+df <- df %>% mutate(lane = (stationN%/%100)) # station numbers' fore numbers are lane number
 df <- df[,c(1,26,3:25)]
 
 # extract station number part
@@ -19,7 +20,7 @@ df <- df[,c(1,26,3:25)]
 tempdf <- df
 tempdf <- tempdf %>% separate(stationK, c('stationK', 'stnumbs'))
 head(tempdf)
-df <- tempdf[-5]
+df <- tempdf[-5] # stnumbs are reduplication of statioN
 
 # this data is only from 2017, so doesn't need year part, and dividing month and day column is good for analysis
 df$date <- ymd(df$date)
@@ -42,10 +43,11 @@ for (i in 1:3){ # month, day, lane, station number are better if it is factor ty
 }
 
 df <- df %>% mutate(weekend = ifelse(weekday == '토요일'|weekday == '일요일', 1, 0))
-df <- df[,c(1:5,27,28,6:26)]
+df <- df[,c(1:5,27,28,6:26)] # reorder columns
 #head(df)
 #head(df[,6:26])
 
+# don't need take, get_off information, delete and make number of people as # of (take-get_off)
 odd_row <- seq(1,150154,2)
 even_row <- seq(2, 150154, 2)
 

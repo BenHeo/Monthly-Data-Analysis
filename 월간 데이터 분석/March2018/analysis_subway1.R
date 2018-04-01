@@ -2,7 +2,7 @@ library(tidyverse)
 library(lubridate)
 library(data.table)
 
-setwd('C:/Users/asd/Desktop/데이터 사이언스/월간 데이터 분석/3월호/data')
+setwd('C:/Users/asd/Desktop/데이터 사이언스/Monthly Data Analysis/월간 데이터 분석/March2018/data')
 # read files
 df <- fread('cleansedDf.csv', header = TRUE)
 head(df)
@@ -212,7 +212,7 @@ we23 <- ggplot(weekendat23, aes(x=reorder(stationK,-avg), y=avg, fill=avg)) +
 
 # 주중과 주말 + 아침 6-7시 타임에 (타는 사람-내리는 사람)수 랭크를 비교하기
 a <- weekdayat6[,c(1,3)]; b <- weekendat6[,c(1,3)]; c <- weekdayat7[,c(1,3)]; d <- weekendat7[,c(1,3)]
-forties <- data.frame(a,b,c,d); forties
+forties <- data.frame(a,b,c,d); forties # actually, doesn't need this but made a dataframe to see
 mergedforties <- merge(x =a, y = b, by = "stationK", all = TRUE)
 mergedforties <- merge(mergedforties, y = c, by = "stationK", all = TRUE)
 mergedforties <- merge(mergedforties, y = d, by = "stationK", all = TRUE)
@@ -221,12 +221,13 @@ mergedforties[,2:5] <- 41-mergedforties[,2:5]
 nazero <- mergedforties
 nazero[is.na(nazero)] <- 0; nazero
 timeforties <- gather(nazero, timing, value, -station)
-library(directlabels)
+library(directlabels) # for geom_dl which write label in graph
 rank40s <- ggplot(timeforties, aes(x=timing, y=value, group = station, color=station)) + geom_line() + geom_point()+
   geom_dl(aes(label = station), method = list(dl.trans(x = x + .2), "last.points",cex = 1,hjust = 1)) +
   geom_dl(aes(label = station), method = list(dl.trans(x = x - .2), "first.points",cex = 1, hjust = 1)) +
   scale_colour_discrete(guide="none")+
   labs(y='rank')
+# just take upper ggplot with plotly to make it interactive. Be careful to use plotly
 # 하단의 문법은 사용하려면 새로운 패키지를 받아야 하며 tidyverse의 많은 패키지를 잡아먹어서 한 번 쓰고 새로 시작해야함
 # library(plotly)
 # g<-ggplot(timeforties, aes(x=timing, y=value, group = station, color=station)) + geom_line() + geom_point()+
@@ -235,8 +236,8 @@ rank40s <- ggplot(timeforties, aes(x=timing, y=value, group = station, color=sta
 #   scale_colour_discrete(guide="none")
 # ggplotly(g, tooltip=c("station"))
 
-ggsave('wd5.png', wd5); ggsave('we5.png', we5); ggsave('wd6.png', wd6); ggsave('we6.png', we6)
-ggsave('wd7.png', wd7); ggsave('we7.png', we7); ggsave('wd18.png', wd18); ggsave('we18.png', we18)
-ggsave('wd19.png', wd19); ggsave('we19.png', we19); ggsave('wd23.png', wd23); ggsave('we23.png', we23); 
-ggsave('wd24.png', wd24); ggsave('we24.png', we24)
+# ggsave('wd5.png', wd5); ggsave('we5.png', we5); ggsave('wd6.png', wd6); ggsave('we6.png', we6)
+# ggsave('wd7.png', wd7); ggsave('we7.png', we7); ggsave('wd18.png', wd18); ggsave('we18.png', we18)
+# ggsave('wd19.png', wd19); ggsave('we19.png', we19); ggsave('wd23.png', wd23); ggsave('we23.png', we23); 
+# ggsave('wd24.png', wd24); ggsave('we24.png', we24)
 
