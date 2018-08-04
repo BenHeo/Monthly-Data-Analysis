@@ -7,3 +7,6 @@ Seats are unique in commute time. So, finding when is good to take subway is my 
 
 ### June2018
 Using APS Failure data, I analyzed it with great result. Better than second winner at last competition. 
+
+### July2018
+Data analysis about Countries Happiness Data, using MARS model
