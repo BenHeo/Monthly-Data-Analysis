@@ -124,3 +124,9 @@ plotmo(happiness)
 plot(happiness)
 summary(happiness)
 evimp(happiness)
+hpnss2017 <- predict(happiness, newdata = seventh2)
+pred2017 <- bind_cols(pred = hpnss2017, real = seventh2$Happy_Score, Country = seventh2$Country,
+                      Region = seventh2$Region)
+p <- ggplot(data = pred2017, aes(x=real, y=pred, label=Country)) + geom_point(mapping = aes(color=Region)) + 
+  geom_smooth(se=TRUE, color = "Gray")
+ggplotly(p)
