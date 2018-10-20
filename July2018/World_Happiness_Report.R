@@ -26,7 +26,8 @@ tempSeven <- left_join(seventh, cr_union)
 tempSeven[is.na(tempSeven$Region),] # to find which country has different name like Hong Kong S.A.R., China
 seventh2 <- tempSeven %>%
   select(1, 11, 2:7, 9, 8, 10) # change order of columns
-happy_data <- bind_rows(fifth, sixth, seventh2) # bind three dfs at once
+fisix <- bind_rows(fifth, sixth)
+happy_data <- bind_rows(fisix, seventh2) # bind three dfs at once
 happy_data2 <- happy_data %>%
   arrange(desc(Happy_Score))
 nrow(happy_data)
@@ -111,7 +112,7 @@ happyGene <- earth(Happy_Score~Generosity,
 plotmo(happyGene, do.par = 2)
 points(korea$Generosity, korea$Happy_Score, cex = 3, pch = 19, col = "red")
 
-# Only about distopia
+# Only about dystopia
 happyDist <- earth(Happy_Score~Dystopia_Residual, 
                      data = happy_data[,4:ncol(happy_data)], ncross = 3, nfold = 10, pmethod = "cv")
 plotmo(happyDist, do.par = 2)
@@ -119,7 +120,7 @@ points(korea$Dystopia_Residual, korea$Happy_Score, cex = 3, pch = 19, col = "red
 
 # Final
 happiness <- earth(Happy_Score~Economy+Family+Health+Freedom+Trust,
-                   data = happy_data[,4:ncol(happy_data)], ncross = 3, nfold = 10, pmethod = "cv")
+                   data = fisix[,4:ncol(fisix)], ncross = 3, nfold = 10, pmethod = "cv")
 plotmo(happiness)
 plot(happiness)
 summary(happiness)
