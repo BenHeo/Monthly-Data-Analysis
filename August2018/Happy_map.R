@@ -2,6 +2,7 @@ library(tidyverse)
 library(data.table)
 library(mixtools)
 library(ggrepel)
+library(Rtsne)
 
 fiv <- fread("world-happiness-report/2015.csv")
 six <- fread("world-happiness-report/2016.csv")
