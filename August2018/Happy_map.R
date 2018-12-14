@@ -57,10 +57,17 @@ y <- fit$points[,2]
 
 ggplot(bind_cols(x=x,y=y,name=country_name, clust=as.factor(gmmcluster)), aes(x, y)) +
   geom_text_repel(aes(label = name, color = clust), fontface = "bold") + 
-  stat_ellipse(aes(x=x, y=y, fill = clust), alpha=.1,type='norm',geom="polygon") +
+  stat_ellipse(aes(x=x, y=y, fill = clust), alpha=.1,type='t',geom="polygon") +
   ggtitle("Gaussian Mixture Cluster by happy_index") + xlab("") + ylab("")
 
 ggplot(bind_cols(x=x,y=y,name=country_name, clust=as.factor(kmscluster)), aes(x, y)) +
   geom_text_repel(aes(label = name, color = clust), fontface = "bold") + 
   stat_ellipse(aes(x=x, y=y, fill = clust), alpha=.1,type='norm', geom="polygon") +
   ggtitle("K-means by happy_index") + xlab("") + ylab("")
+
+tsne_model = Rtsne(as.matrix(country_score), check_duplicates=FALSE, pca=TRUE, perplexity=30, theta=0.5, dims=2)
+
+ggplot(data.frame(x=tsne_model$Y[,1], y=tsne_model$Y[,2], clust=as.factor(gmmcluster), name=country_name), aes(x, y)) +
+  geom_text_repel(aes(label = name, color = clust), fontface = "bold") + 
+  stat_ellipse(aes(x=x, y=y, fill = clust), alpha=.1,type='t', geom="polygon") +
+  ggtitle("Gaussian Mixture Cluster by happy_index visualized using t-sne") + xlab("") + ylab("")

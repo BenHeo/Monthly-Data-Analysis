@@ -13,7 +13,7 @@ roc.plot = function(pred_prob, y, model_name = NULL){
   ROC = performance(prediction(pred_prob ,y) , "tpr","fpr")
   df = data.frame(tpr = ROC@y.values[[1]], fpr = ROC@x.values[[1]])
   title = paste(model_name,"\n AUC:", round(as.numeric(AUC@y.values),4))
-  ggplot(df, aes(fpr, tpr)) + geom_line(size = 2.5, color = "blue") +
+  ggplot(df, aes(fpr, tpr)) + geom_line(size = 2, color = "slateblue3") +
     geom_abline(intercept = 0, slope = 1, linetype = "dotted", size = 2) +
     ggtitle(title) + coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))
 }
@@ -162,7 +162,7 @@ xgb.plot.importance(importance_matrix = import_mat)
 
 roc.plot(xgb.pred, y.test, "Gradient Boosting")
 
-xgb.YN <- ifelse(xgb.pred >= 0.5, "No", "Yes")
+xgb.YN <- ifelse(xgb.pred >= 0.4, "No", "Yes")
 xgb.table <- table(real = y.test, pred = xgb.YN)[,c(2,1)]
 cfm(xgb.table)
 
@@ -217,3 +217,42 @@ partial(xgb.fit, pred.var = c("tenure", "TotalCharges"), plot = TRUE,
         train = smote.X.train)
 partial(xgb.fit, pred.var = c("NofInsuranceServices", "NofStreamingServices"), plot = TRUE,
         train = smote.X.train)
+
+
+###### pdp 11.30 ######
+pdp.monthcharge <- partial(xgb.fit, pred.var = "MonthlyCharges", train = smote.X.train, which.class = 2, prob = TRUE)
+g1 <- ggplot(pdp.monthcharge, aes(MonthlyCharges, yhat)) + geom_line(size = 2) +
+  ggtitle("Monthly Charge PDP") + xlab("Monthly Charges") + ylab("Churn Y/N") 
+
+pdp.stream <- partial(xgb.fit, pred.var = "NofStreamingServices", train = smote.X.train, which.class = 2, prob = TRUE)
+g2 <- ggplot(pdp.stream, aes(NofStreamingServices, yhat)) + geom_line(size=2, color = "skyblue") +
+  ggtitle("# of streaming services PDP") + xlab("# of stream") + ylab("Churn Y/N")
+
+pdp.insure <- partial(xgb.fit, pred.var = "NofInsuranceServices", train = smote.X.train, which.class = 2, prob = TRUE)
+g3 <- ggplot(pdp.insure, aes(NofInsuranceServices, yhat)) + geom_line(size = 2, color = "orange") +
+  ggtitle("# of insurance services PDP") + xlab("# of insure") + ylab("Churn Y/N")
+
+pdp.tenure <- partial(xgb.fit, pred.var = "tenure", train = smote.X.train, which.class = 2, prob = TRUE)
+g4 <- ggplot(pdp.tenure, aes(tenure, yhat)) + geom_line(size=2, color = "green") + 
+  ggtitle("Tenure PDP") + xlab("Tenure") + ylab("Churn Y/N")
+
+grid.arrange(g1, g4, g2, g3, ncol = 2)
+
+####### ICE 11.30 #######
+par.monthcharge <- partial(xgb.fit, pred.var = "MonthlyCharges", ice = TRUE, train = smote.X.train, which.class = 2, prob = TRUE)
+p1 <- ggplot(par.monthcharge, aes(MonthlyCharges, yhat, group=yhat.id)) + geom_line(alpha=0.02) + 
+  ggtitle("Monthly Charge ICE") + xlab("Monthly Charges") + ylab("Churn Y/N")
+
+par.stream <- partial(xgb.fit, pred.var = "NofStreamingServices", ice = TRUE, train = smote.X.train, which.class = 2, prob = TRUE)
+p2 <- ggplot(par.stream, aes(as.factor(as.integer(NofStreamingServices)), yhat)) + geom_boxplot() +
+  ggtitle("# of streaming services ICE") + xlab("# of stream") + ylab("Churn Y/N")
+
+par.insure <- partial(xgb.fit, pred.var = "NofInsuranceServices", ice = TRUE, train = smote.X.train, which.class = 2, prob = TRUE) 
+p3 <- ggplot(par.insure, aes(as.factor(as.integer(NofInsuranceServices)), yhat)) + geom_boxplot() + 
+  ggtitle("# of insurance services ICE") + xlab("# of insure") + ylab("Churn Y/N")
+
+par.tenure <- partial(xgb.fit, pred.var = "tenure", ice = TRUE, train = smote.X.train, which.class = 2, prob = TRUE) 
+p4 <- ggplot(par.tenure, aes(tenure, yhat, group=yhat.id)) + geom_line(alpha = 0.02) + 
+  ggtitle("Tenure ICE") + xlab("Tenure") + ylab("Churn Y/N")
+
+grid.arrange(p1, p4, p2, p3, ncol = 2)
